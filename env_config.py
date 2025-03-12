@@ -10,10 +10,19 @@ GLOBAL_SOURCE_PATH=os.path.join(GLOBAL_PATH, "activate_env.zshrc")
 activate_config_flag = os.path.join(GLOBAL_PATH, ".activate_config")
 activate_modules_list = os.path.join(GLOBAL_PATH, ".activate_modules")
 
+config_dir = os.path.join(GLOBAL_PATH, "configs")
+module_dir = os.path.join(GLOBAL_PATH, "modules")
+
+if not os.path.exists(config_dir):
+    os.makedirs(config_dir)
+if not os.path.exists(module_dir):
+    os.makedirs(module_dir)
+
+
 def config_path(config_name):
-    return os.path.join(GLOBAL_PATH, "configs", config_name)
+    return os.path.join(config_dir, config_name)
 def module_path(module_name):
-    return os.path.join(GLOBAL_PATH, "modules", module_name)
+    return os.path.join(module_dir, module_name)
 
 
 
