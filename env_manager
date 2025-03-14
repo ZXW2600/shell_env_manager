@@ -1,82 +1,95 @@
 #! /usr/bin/python3
 import env_config as ec
 
+
 def activate_config(*args, **kwargs):
-    config_name=kwargs['config_name']
+    config_name = kwargs["config_name"]
     ec.activate_config(config_name)
     print(f"Activated configuration {config_name}")
     print("Resource the terminal to apply the changes")
-    
+
 
 def activate_module(*args, **kwargs):
-    module_name=kwargs['module_name']
+    module_name = kwargs["module_name"]
     ec.activate_module(module_name)
     print(f"Activated module {module_name}")
-    
+
 
 def deactivate_config(*args, **kwargs):
     ec.deactivate_config()
     print("Deactivated configuration")
 
+
 def deactivate_module(*args, **kwargs):
-    module_name=kwargs['module_name']
+    module_name = kwargs["module_name"]
     ec.deactivate_module(module_name)
     print(f"Deactivated module {module_name}")
-    
+
+
 def list_configs(*args, **kwargs):
     print("All configurations:")
     for config in ec.get_all_configs():
         print(config)
+
 
 def list_modules(*args, **kwargs):
     print("All modules:")
     for module in ec.get_all_modules():
         print(module)
 
+
 def list_activated_modules(*args, **kwargs):
-    print("Activated modules:")
-    for module in ec.get_activated_modules():
-        print(module)
+    print(f"{'-'*10} Activated modules {'-'*10}")
+    for i, module in enumerate(ec.get_activated_modules()):
+        print(f"{i+1:>}. {module}")
+
 
 def list_activated_config(*args, **kwargs):
-    print("Activated configuration:")
-    print(ec.get_activated_config())
-    
+    print(f"Activated configuration : {ec.get_activated_config()}")
+
+
 def list_activated(*args, **kwargs):
     list_activated_config()
     list_activated_modules()
 
+
 def create_config(*args, **kwargs):
-    config_name=kwargs['config_name']
-    copy_from=kwargs['copy_from']
+    config_name = kwargs["config_name"]
+    copy_from = kwargs["copy_from"]
     ec.create_config(config_name, copy_from)
     print(f"Created configuration {config_name}")
 
+
 def create_module(*args, **kwargs):
-    module_name=kwargs['module_name']
-    copy_from=kwargs['copy_from']
+    module_name = kwargs["module_name"]
+    copy_from = kwargs["copy_from"]
     ec.create_module(module_name, copy_from)
     print(f"Created module {module_name}")
 
+
 def delete_config(*args, **kwargs):
-    config_name=kwargs['config_name']
+    config_name = kwargs["config_name"]
     ec.delete_config(config_name)
     print(f"Deleted configuration {config_name}")
 
+
 def delete_module(*args, **kwargs):
-    module_name=kwargs['module_name']
+    module_name = kwargs["module_name"]
     ec.delete_module(module_name)
     print(f"Deleted module {module_name}")
 
+
 def edit_config(*args, **kwargs):
-    config_name=kwargs['config_name']
+    config_name = kwargs["config_name"]
     ec.edit_config(config_name)
     print(f"Edited configuration {config_name}")
 
+
 def edit_module(*args, **kwargs):
-    module_name=kwargs['module_name']
+    module_name = kwargs["module_name"]
     ec.edit_module(module_name)
     print(f"Edited module {module_name}")
+
 
 def edit_activated_config(*args, **kwargs):
     ec.edit_config(ec.get_activated_config())
@@ -87,11 +100,13 @@ def main():
     import argparse
     import argcomplete
 
-    parser = argparse.ArgumentParser(description='Manage environment configurations and modules')
-    # args 
+    parser = argparse.ArgumentParser(
+        description="Manage environment configurations and modules"
+    )
+    # args
     # bin activate_config <config_name>
     # bin activate_module <module_name>
-    # bin deactivate_config 
+    # bin deactivate_config
     # bin deactivate_module <module_name>
     # bin list_configs
     # bin list_modules
@@ -104,43 +119,74 @@ def main():
     # bin delete_module <module_name>
     # bin edit_config <config_name>
     # bin edit_module <module_name>
-    # bin edit_activated_config 
-    parser = argparse.ArgumentParser(description='Manage environment configurations and modules')
-    subparsers = parser.add_subparsers(dest='command', help='sub-command help', required=True)
+    # bin edit_activated_config
+    parser = argparse.ArgumentParser(
+        description="Manage environment configurations and modules"
+    )
+    subparsers = parser.add_subparsers(
+        dest="command", help="sub-command help", required=True
+    )
     # make command auto-completable
 
-    subparsers.add_parser('activate_config', help='Activate a configuration').add_argument('config_name',choices=ec.get_all_configs())
-    subparsers.add_parser('activate_module', help='Activate a module').add_argument('module_name',choices=ec.get_all_modules())
-    subparsers.add_parser('deactivate_config', help='Deactivate the current configuration')
-    subparsers.add_parser('deactivate_module', help='Deactivate a module').add_argument('module_name',choices=ec.get_activated_modules())
-    subparsers.add_parser('list_configs', help='List all configurations')
-    subparsers.add_parser('list_modules', help='List all modules')
-    subparsers.add_parser('list_activated', help='List all activated configurations and modules')
-    subparsers.add_parser('list_activated_modules', help='List all activated modules')
-    subparsers.add_parser('list_activated_config', help='List the activated configuration')
-    create_config_sa=subparsers.add_parser('create_config', help='Create a new configuration')
-    create_config_sa.add_argument('config_name')
-    create_config_sa.add_argument('copy_from', nargs='?',choices=ec.get_all_configs())
-    create_module_sa=subparsers.add_parser('create_module', help='Create a new module')
-    create_module_sa.add_argument('module_name')
-    create_module_sa.add_argument('copy_from', nargs='?',choices=ec.get_all_modules())
-    subparsers.add_parser('delete_config', help='Delete a configuration').add_argument('config_name',choices=ec.get_all_configs())
-    subparsers.add_parser('delete_module', help='Delete a module').add_argument('module_name',choices=ec.get_all_modules())
-    subparsers.add_parser('edit_config', help='Edit a configuration').add_argument('config_name',choices=ec.get_all_configs())
-    subparsers.add_parser('edit_module', help='Edit a module').add_argument('module_name',choices=ec.get_all_modules())
-    subparsers.add_parser('edit_activated_config', help='Edit the activated configuration')
-
+    subparsers.add_parser(
+        "activate_config", help="Activate a configuration"
+    ).add_argument("config_name", choices=ec.get_all_configs())
+    subparsers.add_parser("activate_module", help="Activate a module").add_argument(
+        "module_name", choices=ec.get_all_modules()
+    )
+    subparsers.add_parser(
+        "deactivate_config", help="Deactivate the current configuration"
+    )
+    subparsers.add_parser("deactivate_module", help="Deactivate a module").add_argument(
+        "module_name", choices=ec.get_activated_modules()
+    )
+    subparsers.add_parser("list_configs", help="List all configurations")
+    subparsers.add_parser("list_modules", help="List all modules")
+    subparsers.add_parser("info", help="List all activated configurations and modules")
+    subparsers.add_parser(
+        "list_activated", help="List all activated configurations and modules"
+    )
+    subparsers.add_parser("list_activated_modules", help="List all activated modules")
+    subparsers.add_parser(
+        "list_activated_config", help="List the activated configuration"
+    )
+    create_config_sa = subparsers.add_parser(
+        "create_config", help="Create a new configuration"
+    )
+    create_config_sa.add_argument("config_name")
+    create_config_sa.add_argument("copy_from", nargs="?", choices=ec.get_all_configs())
+    create_module_sa = subparsers.add_parser(
+        "create_module", help="Create a new module"
+    )
+    create_module_sa.add_argument("module_name")
+    create_module_sa.add_argument("copy_from", nargs="?", choices=ec.get_all_modules())
+    subparsers.add_parser("delete_config", help="Delete a configuration").add_argument(
+        "config_name", choices=ec.get_all_configs()
+    )
+    subparsers.add_parser("delete_module", help="Delete a module").add_argument(
+        "module_name", choices=ec.get_all_modules()
+    )
+    subparsers.add_parser("edit_config", help="Edit a configuration").add_argument(
+        "config_name", choices=ec.get_all_configs()
+    )
+    subparsers.add_parser("edit_module", help="Edit a module").add_argument(
+        "module_name", choices=ec.get_all_modules()
+    )
+    subparsers.add_parser(
+        "edit_activated_config", help="Edit the activated configuration"
+    )
 
     argcomplete.autocomplete(parser)
 
     args = parser.parse_args()
-    function_map={
+    function_map = {
         "activate_config": activate_config,
         "activate_module": activate_module,
         "deactivate_config": deactivate_config,
         "deactivate_module": deactivate_module,
         "list_configs": list_configs,
         "list_modules": list_modules,
+        "info": list_activated,
         "list_activated": list_activated,
         "list_activated_modules": list_activated_modules,
         "list_activated_config": list_activated_config,
@@ -150,13 +196,10 @@ def main():
         "delete_module": delete_module,
         "edit_config": edit_config,
         "edit_module": edit_module,
-        "edit_activated_config": edit_activated_config
-        
+        "edit_activated_config": edit_activated_config,
     }
     function_map[args.command](**vars(args))
 
+
 if __name__ == "__main__":
     main()
-
-
-

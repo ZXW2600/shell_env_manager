@@ -3,7 +3,6 @@ import os
 
 # get the path of the python file
 GLOBAL_PATH = os.path.dirname(os.path.realpath(__file__))
-print(GLOBAL_PATH)
 
 GLOBAL_SOURCE_PATH=os.path.join(GLOBAL_PATH, "activate_env.zshrc")
 
